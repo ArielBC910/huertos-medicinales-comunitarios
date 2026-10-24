@@ -75,7 +75,7 @@ public class WorkflowTest {
     return service.create(
         "SIE-03",
         "Jornada comunitaria de siembra y cuidado.",
-        LocalDate.now().minusDays(1),
+        LocalDate.now(java.time.ZoneId.of("America/Guayaquil")).minusDays(1),
         List.of(account("participante.demo").id),
         photo());
   }
@@ -244,7 +244,7 @@ public class WorkflowTest {
             service.create(
                 "SIE-03",
                 "Una actividad válida de prueba",
-                LocalDate.now(),
+                LocalDate.now(java.time.ZoneId.of("America/Guayaquil")),
                 List.of(account("revisor.demo").id),
                 photo()));
     var member = account("participante.demo");
@@ -256,7 +256,7 @@ public class WorkflowTest {
             service.create(
                 "SIE-03",
                 "Una actividad válida de prueba",
-                LocalDate.now(),
+                LocalDate.now(java.time.ZoneId.of("America/Guayaquil")),
                 List.of(member.id),
                 photo()));
   }
@@ -299,7 +299,7 @@ public class WorkflowTest {
             service.create(
                 "SIE-03",
                 "Actividad de prueba inválida",
-                LocalDate.now().plusDays(2),
+                LocalDate.now(java.time.ZoneId.of("America/Guayaquil")).plusDays(2),
                 List.of(account("participante.demo").id),
                 photo()));
     assertThrows(
@@ -308,7 +308,7 @@ public class WorkflowTest {
             service.create(
                 "OTRO",
                 "Actividad de prueba inválida",
-                LocalDate.now(),
+                LocalDate.now(java.time.ZoneId.of("America/Guayaquil")),
                 List.of(account("participante.demo").id),
                 photo()));
   }
@@ -336,7 +336,7 @@ public class WorkflowTest {
         service.create(
             "CUI-04",
             "Riego comunitario de prueba",
-            LocalDate.now(),
+            LocalDate.now(java.time.ZoneId.of("America/Guayaquil")),
             List.of(account("participante.demo").id, account("gestor.demo").id),
             photo());
     actor("revisor.demo");

@@ -9,6 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProgressService {
+  public int officialThreshold() {
+    return official;
+  }
+
+  public int masterThreshold() {
+    return master;
+  }
+
   private final PointMovementRepository points;
   private final ActivityRepository activities;
   private final ParticipationRepository participation;

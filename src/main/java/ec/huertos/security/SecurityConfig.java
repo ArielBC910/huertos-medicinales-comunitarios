@@ -56,7 +56,8 @@ public class SecurityConfig {
                     r ->
                         r.policy(
                             org.springframework.security.web.header.writers
-                                .ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
+                                .ReferrerPolicyHeaderWriter.ReferrerPolicy
+                                .STRICT_ORIGIN_WHEN_CROSS_ORIGIN)))
         .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
         .logout(logout -> logout.logoutSuccessUrl("/"))
         .build();

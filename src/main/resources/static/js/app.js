@@ -14,7 +14,7 @@ document
   .forEach((form) => {
     const token = form.querySelector('input[name="_csrf"]');
     // CSRF is checked before the servlet reads the multipart body. Put the token in
-    // the same-origin form action; it never leaves this host and no referrer is sent.
+    // the same-origin form action. Cross-origin referrers contain only the origin.
     if (token)
       form.action +=
         (form.action.includes("?") ? "&" : "?") +

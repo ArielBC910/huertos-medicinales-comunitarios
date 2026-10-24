@@ -33,4 +33,6 @@ No se incorporaron IA, aprobaciones automáticas, PWA, modo sin conexión, notif
 - [Protección CSRF de Spring Security](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html)
 - [Integración Thymeleaf y Spring Security](https://www.thymeleaf.org/doc/articles/springsecurity.html)
 
-El proyecto apunta a Java 21. La compilación y pruebas locales usan el JDK 25 instalado con `--release 21`; CI y Docker usan JDK 21.
+El proyecto apunta a Java 21. Se verificó primero con JDK 25 y `--release 21`, y después se repitieron las pruebas y el empaquetado con JDK 21. CI y Docker también usan JDK 21.
+
+- [Política de teselas de OpenStreetMap](https://operations.osmfoundation.org/policies/tiles/): se conserva Referer de origen con `strict-origin-when-cross-origin`, atribución visible y caché normal del navegador.

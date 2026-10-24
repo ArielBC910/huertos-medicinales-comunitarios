@@ -44,7 +44,10 @@
               th:text="${progress.approvedFor(actor.id).size() >= 5 ? 'Misión cumplida · insignia obtenida' : 'Misión en curso'}"
             ></p>
             <small class="muted"
-              >Reglas demo: Oficial desde 100 puntos, Maestro desde 300. Las
+              >Reglas demo: Oficial desde
+              <span th:text="${progress.officialThreshold()}"></span> puntos,
+              Maestro desde
+              <span th:text="${progress.masterThreshold()}"></span>. Las
               insignias y misiones no añaden puntos extra.</small
             >
           </section>

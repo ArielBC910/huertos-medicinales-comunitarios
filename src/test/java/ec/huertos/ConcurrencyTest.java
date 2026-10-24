@@ -46,7 +46,7 @@ class ConcurrencyTest {
         service.create(
             "CUI-04",
             "Riego para prueba de concurrencia",
-            LocalDate.now().minusDays(1),
+            LocalDate.now(java.time.ZoneId.of("America/Guayaquil")).minusDays(1),
             List.of(accounts.findByUsername("participante.demo").orElseThrow().id),
             new MockMultipartFile("photo", "photo.png", "image/png", output.toByteArray()));
     Long submission = service.latest(a.id).id;
