@@ -10,6 +10,8 @@ Requisitos: JDK 21 o compatible y conexión a internet para la primera descarga 
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=demo"
 ```
 
+También se incluye `iniciar-demo.ps1`, que permite indicar `-JavaHome` y configura una carpeta de sockets para Windows con rutas temporales largas.
+
 En Linux/macOS:
 
 ```bash
@@ -100,3 +102,9 @@ La suite prueba pantallas, permisos, CSRF, privacidad, límite de integrantes, a
 - Antes de un despliegue público: HTTPS, cookies `secure`, recuperación/cambio de contraseña, límites de intentos de login, revisión institucional de permisos, restauración de respaldos y pruebas de seguridad. Se incluye una base funcional para seguir desarrollando; no una certificación de producción.
 
 Consultar [el análisis y decisiones](docs/ANALISIS.md), [la matriz de cobertura](docs/TRAZABILIDAD.md) y [la arquitectura](docs/ARQUITECTURA.md).
+
+## Evidencia de verificación
+
+[Informe de pruebas, capturas y límites](docs/VERIFICACION.md).
+
+![Pantalla de inicio](docs/screenshots/inicio.png)
