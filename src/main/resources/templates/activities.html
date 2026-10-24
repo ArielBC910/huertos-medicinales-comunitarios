@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Actividades')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">DEL CUIDADO A LA EVIDENCIA</div>
+        <h1>La vida del huerto.</h1>
+        <p class="lead">Registra cada jornada y sigue su revisión.</p>
+        <details th:if="${actor.role == 'GESTOR'}" class="panel">
+          <summary>＋ Registrar una actividad</summary>
+          <form
+            th:action="@{/gestion/actividades}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <div class="two-col">
+              <div>
+                <label for="type">Tipo de actividad</label
+                ><select id="type" name="type" required>
+                  <option
+                    th:each="t : ${types}"
+                    th:value="${t.key}"
+                    th:text="${t.key}+' · '+${t.value}"
+                  ></option>
+                </select>
+              </div>
+              <div>
+                <label for="date">Fecha de realización</label
+                ><input
+                  type="date"
+                  id="date"
+                  name="date"
+                  th:value="${today}"
+                  th:max="${today}"
+                  required
+                />
+              </div>
+            </div>
+            <label for="description">Descripción</label
+            ><textarea
+              id="description"
+              name="description"
+              minlength="10"
+              maxlength="2000"
+              required
+              placeholder="¿Qué hicieron y cómo contribuyó al huerto?"
+            ></textarea>
+            <fieldset>
+              <legend>Participantes activos</legend>
+              <p class="muted">
+                Esta lista quedará fija al registrar la actividad.
+              </p>
+              <label class="checkbox" th:each="u : ${members}"
+                ><input
+                  type="checkbox"
+                  name="selected"
+                  th:value="${u.id}" /><span th:text="${u.displayName}"></span
+              ></label>
+            </fieldset>
+            <label for="photo">Fotografía de evidencia</label
+            ><input
+              type="file"
+              id="photo"
+              name="photo"
+              accept="image/png,image/jpeg"
+              required
+            /><small class="muted"
+              >PNG o JPEG · hasta 5 MB y 20 megapíxeles. Acceso limitado a tu
+              comunidad y sus revisores.</small
+            ><button class="button">Enviar a revisión →</button>
+          </form>
+        </details>
+        <div class="table-wrap panel">
+          <table>
+            <thead>
+              <tr>
+                <th>Actividad</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="a : ${activities}">
+                <td>
+                  <strong th:text="${types[a.type]}"></strong
+                  ><small
+                    th:text="${#strings.abbreviate(a.description,80)}"
+                  ></small>
+                </td>
+                <td th:text="${a.date}"></td>
+                <td>
+                  <span
+                    class="pill"
+                    th:classappend="${a.status}"
+                    th:text="${a.status}"
+                  ></span>
+                </td>
+                <td>
+                  <a th:href="@{/actividades/{id}(id=${a.id})}"
+                    >Ver historial ↗</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="empty" th:if="${activities.isEmpty()}">
+            <h3>Aún no hay actividades.</h3>
+            <p>
+              La primera jornada registrada aparecerá aquí, junto con su estado
+              de revisión.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

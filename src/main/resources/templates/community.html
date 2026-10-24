@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Comunidad')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div
+          class="eyebrow"
+          th:text="${community.province}+' / '+${community.parish}"
+        ></div>
+        <h1 th:text="${community.name}"></h1>
+        <p class="lead" th:text="${community.description}"></p>
+        <div th:replace="~{layout :: growth(${community})}"></div>
+        <div class="two-col">
+          <section class="panel" th:if="${garden != null}">
+            <h2 th:text="${garden.name}"></h2>
+            <dl class="details">
+              <dt>Área</dt>
+              <dd th:text="${garden.area}+' m²'"></dd>
+              <dt>Diseño</dt>
+              <dd th:text="${garden.design}"></dd>
+              <dt>Suelo</dt>
+              <dd th:text="${garden.soil}"></dd>
+              <dt>Agua</dt>
+              <dd th:text="${garden.water}"></dd>
+              <dt>Abono</dt>
+              <dd th:text="${garden.compost}"></dd>
+              <dt>Cerca</dt>
+              <dd th:text="${garden.fence}"></dd>
+            </dl>
+            <a href="/mapa">Ubicar en el mapa ↗</a>
+          </section>
+          <section class="panel">
+            <div class="eyebrow">APORTES RECONOCIDOS</div>
+            <h2>
+              <span th:text="${progress.community(community.id)}"></span> puntos
+              comunitarios
+            </h2>
+            <p>
+              El total comunitario se calcula por separado de los puntos
+              personales. Las actividades pendientes y rechazadas no suman.
+            </p>
+            <a href="/ranking">Consultar ranking ↗</a>
+          </section>
+        </div>
+        <h2>Plantas del huerto</h2>
+        <div class="cards">
+          <article class="panel" th:each="p : ${plants}">
+            <span class="plant-symbol">❧</span>
+            <h3 th:text="${p.name}"></h3>
+            <p><em th:text="${p.scientificName}"></em></p>
+            <p th:text="${p.cycle}"></p>
+          </article>
+        </div>
+        <p th:if="${plants.isEmpty()}" class="empty">
+          Todavía no hay plantas registradas.
+        </p>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

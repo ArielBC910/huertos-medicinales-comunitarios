@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Inicio')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <section class="hero">
+          <div>
+            <div class="eyebrow">CULTIVAMOS COMUNIDAD</div>
+            <h1>Un huerto crece.<br /><em>Una comunidad florece.</em></h1>
+            <p>
+              Conectamos huertos medicinales del Ecuador para cuidar la tierra,
+              compartir saberes y reconocer cada aporte.
+            </p>
+            <div class="actions">
+              <a href="/mapa" class="button">Explorar el mapa ↗</a
+              ><a href="/plantas" class="button secondary"
+                >Conocer las plantas</a
+              >
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="stem s1"><b></b><i></i></div>
+            <div class="stem s2"><b></b><i></i></div>
+            <div class="stem s3"><b></b><i></i></div>
+            <div class="soil-line"></div>
+            <span>SABERES VIVOS · RAÍCES COMPARTIDAS</span>
+          </div>
+        </section>
+        <div class="stats">
+          <div>
+            <span class="stat-icon">⌂</span
+            ><strong th:text="${communities.size()}">0</strong
+            ><small>Comunidades conectadas</small>
+          </div>
+          <div>
+            <span class="stat-icon">❧</span
+            ><strong th:text="${plantCount}">0</strong
+            ><small>Plantas en el catálogo</small>
+          </div>
+          <div>
+            <span class="stat-icon">✓</span
+            ><strong th:text="${approved}">0</strong
+            ><small>Actividades validadas</small>
+          </div>
+        </div>
+        <section>
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">LA RED QUE CULTIVAMOS</div>
+              <h2>Conoce nuestras comunidades</h2>
+            </div>
+            <a href="/mapa">Ver en el mapa ↗</a>
+          </div>
+          <div class="cards">
+            <a
+              class="community-card"
+              th:each="c,iter : ${communities}"
+              th:href="@{/comunidades/{id}(id=${c.id})}"
+              ><div
+                class="card-landscape"
+                th:classappend="'landscape-'+${iter.index % 3}"
+              >
+                <span>⌁</span><small th:text="${c.province}"></small>
+              </div>
+              <div class="card-body">
+                <div class="eyebrow" th:text="${c.parish}"></div>
+                <h3 th:text="${c.name}"></h3>
+                <p th:text="${#strings.abbreviate(c.description,115)}"></p>
+                <div class="card-meta">
+                  <span
+                    ><b th:text="${progress.community(c.id)}"></b> puntos
+                    comunitarios</span
+                  ><span>Explorar ↗</span>
+                </div>
+              </div></a
+            >
+          </div>
+        </section>
+        <div class="callout">
+          <span>01 → 02 → 03</span>
+          <div>
+            <h3>Cada aporte cuenta cuando se valida.</h3>
+            <p>
+              El gestor registra. Un revisor autorizado verifica. La comunidad
+              crece.
+            </p>
+          </div>
+          <a class="button secondary" href="/login">Participar ↗</a>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

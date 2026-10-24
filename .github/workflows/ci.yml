@@ -1,0 +1,21 @@
+name: Verificación Java y PostgreSQL
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Pruebas y empaquetado (incluye Testcontainers PostgreSQL)
+        run: mvn -B verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huertos-aplicacion
+          path: target/*.jar
+          retention-days: 7

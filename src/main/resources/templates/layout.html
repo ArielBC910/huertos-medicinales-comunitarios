@@ -1,0 +1,125 @@
+<!doctype html>
+<html
+  lang="es"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head th:fragment="head(title)">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title th:text="${title} + ' · Huertos'">Huertos</title>
+    <link rel="stylesheet" href="/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="icon" href="/images/sprout.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <aside th:fragment="nav" class="sidebar">
+      <a class="brand" href="/"
+        ><img src="/images/sprout.svg" alt="" width="38" /><span
+          >Huertos<small>MEDICINALES COMUNITARIOS</small></span
+        ></a
+      >
+      <div class="nav-label">EXPLORAR</div>
+      <nav aria-label="Navegación principal">
+        <a href="/">◈ <span>Inicio</span></a
+        ><a href="/mapa">⌖ <span>Mapa de huertos</span></a
+        ><a href="/plantas">❧ <span>Plantas medicinales</span></a
+        ><a href="/ranking">♧ <span>Ranking comunitario</span></a
+        ><a href="/calendario">▦ <span>Calendario agrícola</span></a>
+        <div sec:authorize="isAuthenticated()" class="nav-label">
+          MI COMUNIDAD
+        </div>
+        <a sec:authorize="hasRole('GESTOR')" href="/gestion"
+          >⌂ <span>Comunidad y huerto</span></a
+        ><a sec:authorize="isAuthenticated()" href="/actividades"
+          >☷ <span>Actividades e historial</span></a
+        ><a sec:authorize="hasRole('REVISOR')" href="/revision"
+          >✓ <span>Revisar evidencias</span></a
+        ><a sec:authorize="hasAnyRole('GESTOR','PARTICIPANTE')" href="/foro"
+          >◌ <span>Foro comunitario</span></a
+        ><a sec:authorize="hasAnyRole('GESTOR','PARTICIPANTE')" href="/bodega"
+          >▤ <span>Bodega</span></a
+        ><a sec:authorize="hasRole('GESTOR')" href="/gestion/plantas"
+          >✎ <span>Gestionar plantas</span></a
+        ><a sec:authorize="isAuthenticated()" href="/perfil"
+          >◎ <span>Mi progreso y avisos</span></a
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <p>Saberes que cuidamos.<br />Raíces que compartimos.</p>
+        <small>ECUADOR · PROTOTIPO V0.1</small>
+      </div>
+    </aside>
+    <header th:fragment="top" class="topbar">
+      <span
+        >Red de huertos medicinales <span class="muted">/ Ecuador</span></span
+      >
+      <div>
+        <a th:if="${actor == null}" class="button secondary small" href="/login"
+          >Iniciar sesión ↗</a
+        >
+        <div th:if="${actor != null}" class="account">
+          <a href="/perfil" th:text="${actor.displayName}"></a
+          ><span class="pill" th:text="${actor.role}"></span>
+          <form th:action="@{/logout}" method="post">
+            <button class="text-button" type="submit">Salir</button>
+          </form>
+        </div>
+      </div>
+    </header>
+    <footer th:fragment="footer" class="footer">
+      Huertos Medicinales Comunitarios · Ecuador
+      <span
+        >Contenido educativo. Los saberes registrados no constituyen
+        indicaciones médicas.</span
+      >
+      <script src="/js/app.js" defer></script>
+    </footer>
+    <div th:fragment="growth(community)" class="growth-card">
+      <div class="growth-copy">
+        <span class="eyebrow">HUERTO VIRTUAL</span>
+        <h3>El cuidado deja raíces.</h3>
+        <p>
+          El crecimiento refleja únicamente actividades con evidencia aprobada.
+        </p>
+        <div
+          class="progress"
+          role="progressbar"
+          aria-label="Avance del huerto"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          th:attr="aria-valuenow=${progress.growth(community.id)}"
+        >
+          <div
+            class="progress-bar"
+            th:style="'width:'+${progress.growth(community.id)}+'%'"
+          ></div>
+        </div>
+        <small
+          ><span th:text="${progress.confirmed(community.id)}">0</span>
+          actividades validadas ·
+          <span th:text="${progress.growth(community.id)}">0</span>% del hito de
+          demostración (5 actividades)</small
+        >
+      </div>
+      <div
+        class="garden-art"
+        th:classappend="${progress.confirmed(community.id) > 0} ? 'grown' : ''"
+        role="img"
+        aria-label="Ilustración del huerto según su avance"
+      >
+        <span>☀</span>
+        <div class="plot">
+          <i>🌱</i
+          ><i th:text="${progress.confirmed(community.id)>1?'🌿':'🌱'}"></i
+          ><i th:text="${progress.confirmed(community.id)>3?'🌻':'🌱'}"></i>
+        </div>
+        <div class="plot">
+          <i th:text="${progress.confirmed(community.id)>2?'🌿':'🌱'}"></i
+          ><i>🌱</i
+          ><i th:text="${progress.confirmed(community.id)>4?'🌻':'🌱'}"></i>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

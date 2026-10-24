@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Plantas medicinales')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">UN CATÁLOGO QUE CRECE CONTIGO</div>
+        <h1>Plantas y saberes.</h1>
+        <p class="lead">Conoce las especies que cuidan nuestras comunidades.</p>
+        <form method="get" action="/plantas" class="search">
+          <label class="visually-hidden" for="q">Buscar planta</label
+          ><input
+            name="q"
+            id="q"
+            placeholder="Buscar por nombre común o científico…"
+            th:value="${q}"
+            maxlength="100"
+          /><button class="button">Buscar</button>
+        </form>
+        <div class="cards">
+          <article class="panel plant-card" th:each="p : ${plants}">
+            <div class="botanical">❧</div>
+            <div class="eyebrow" th:text="${p.cycle}"></div>
+            <h2 th:text="${p.name}"></h2>
+            <p><em th:text="${p.scientificName}"></em></p>
+            <p
+              th:if="${!#strings.isEmpty(p.otherNames)}"
+              th:text="'Otros nombres: '+${p.otherNames}"
+            ></p>
+            <h4>Saber tradicional documentado</h4>
+            <p th:text="${p.traditionalUse}"></p>
+            <small class="source" th:text="${p.source}"></small>
+          </article>
+        </div>
+        <p class="empty" th:if="${plants.isEmpty()}">
+          No hay plantas que coincidan con la búsqueda.
+        </p>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

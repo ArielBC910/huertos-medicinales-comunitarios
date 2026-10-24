@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Ranking comunitario')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">EL ESFUERZO QUE COMPARTIMOS</div>
+        <h1>Comunidades que florecen.</h1>
+        <p class="lead">
+          Ranking nacional por puntos comunitarios obtenidos en actividades
+          aprobadas.
+        </p>
+        <div class="panel">
+          <div class="rank-row" th:each="c,iter : ${ranking}">
+            <span class="rank-number" th:text="${iter.count}"></span>
+            <div>
+              <h3>
+                <a
+                  th:href="@{/comunidades/{id}(id=${c.id})}"
+                  th:text="${c.name}"
+                ></a>
+              </h3>
+              <small th:text="${c.province}+' · '+${c.parish}"></small>
+            </div>
+            <strong
+              ><span th:text="${progress.community(c.id)}"></span>
+              <small>pts</small></strong
+            >
+          </div>
+        </div>
+        <p class="muted">
+          En igualdad de puntos se muestra orden alfabético. Los puntos
+          personales no se suman al puntaje comunitario.
+        </p>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

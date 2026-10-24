@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Gestionar comunidad')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">GESTIÓN DE TU COMUNIDAD</div>
+        <h1 th:text="${community.name}"></h1>
+        <p class="lead">
+          Cuida la información del huerto y de quienes lo hacen posible.
+        </p>
+        <div class="two-col">
+          <form class="panel" th:action="@{/gestion/comunidad}" method="post">
+            <h2>Comunidad</h2>
+            <label for="c-name">Nombre</label
+            ><input
+              name="name"
+              id="c-name"
+              th:value="${community.name}"
+              required
+              maxlength="120"
+            /><label for="province">Provincia</label
+            ><input
+              name="province"
+              id="province"
+              th:value="${community.province}"
+              required
+              maxlength="100"
+            /><label for="parish">Parroquia</label
+            ><input
+              name="parish"
+              id="parish"
+              th:value="${community.parish}"
+              required
+              maxlength="100"
+            /><label for="description">Descripción pública</label
+            ><textarea
+              name="description"
+              id="description"
+              th:text="${community.description}"
+              minlength="10"
+              maxlength="2000"
+              required
+            ></textarea
+            ><button class="button">Guardar comunidad</button>
+          </form>
+          <form class="panel" th:action="@{/gestion/huerto}" method="post">
+            <h2>Huerto físico</h2>
+            <label for="g-name">Nombre del huerto</label
+            ><input
+              name="name"
+              id="g-name"
+              th:value="${garden.name}"
+              required
+              maxlength="120"
+            /><label for="address">Dirección (uso interno)</label
+            ><input
+              name="address"
+              id="address"
+              th:value="${garden.address}"
+              required
+              maxlength="200"
+            />
+            <div class="two-col">
+              <div>
+                <label for="latitude">Latitud pública</label
+                ><input
+                  type="number"
+                  step="any"
+                  name="latitude"
+                  id="latitude"
+                  th:value="${garden.latitude}"
+                  min="-5.1"
+                  max="1.6"
+                  required
+                />
+              </div>
+              <div>
+                <label for="longitude">Longitud pública</label
+                ><input
+                  type="number"
+                  step="any"
+                  name="longitude"
+                  id="longitude"
+                  th:value="${garden.longitude}"
+                  min="-92"
+                  max="-75"
+                  required
+                />
+              </div>
+            </div>
+            <label for="area">Área (m²)</label
+            ><input
+              type="number"
+              step="any"
+              min="0.01"
+              name="area"
+              id="area"
+              th:value="${garden.area}"
+              required
+            />
+            <div class="two-col">
+              <div>
+                <label for="design">Diseño</label
+                ><input
+                  name="design"
+                  id="design"
+                  th:value="${garden.design}"
+                  required
+                  maxlength="100"
+                />
+              </div>
+              <div>
+                <label for="soil">Suelo</label
+                ><input
+                  name="soil"
+                  id="soil"
+                  th:value="${garden.soil}"
+                  required
+                  maxlength="100"
+                />
+              </div>
+              <div>
+                <label for="water">Fuente de agua</label
+                ><input
+                  name="water"
+                  id="water"
+                  th:value="${garden.water}"
+                  required
+                  maxlength="100"
+                />
+              </div>
+              <div>
+                <label for="compost">Abono</label
+                ><input
+                  name="compost"
+                  id="compost"
+                  th:value="${garden.compost}"
+                  required
+                  maxlength="100"
+                />
+              </div>
+            </div>
+            <label for="fence">Tipo de cerca</label
+            ><input
+              name="fence"
+              id="fence"
+              th:value="${garden.fence}"
+              required
+              maxlength="100"
+            /><button class="button">Guardar huerto</button>
+          </form>
+        </div>
+        <div class="section-heading">
+          <h2>Integrantes</h2>
+          <span class="pill">Máximo 25 activos, incluido el gestor</span>
+        </div>
+        <div class="panel table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="u : ${members}">
+                <td th:text="${u.displayName}"></td>
+                <td th:text="${u.role}"></td>
+                <td th:text="${u.active?'Activo':'Baja registrada'}"></td>
+                <td>
+                  <form
+                    th:if="${u.role=='PARTICIPANTE'}"
+                    th:action="@{/gestion/integrantes/{id}/estado(id=${u.id})}"
+                    method="post"
+                  >
+                    <button
+                      class="button secondary small"
+                      th:text="${u.active?'Registrar baja':'Reactivar'}"
+                    ></button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <details class="panel">
+          <summary>＋ Incorporar integrante</summary>
+          <form th:action="@{/gestion/integrantes}" method="post">
+            <div class="two-col">
+              <div>
+                <label for="member-name">Nombre visible</label
+                ><input
+                  id="member-name"
+                  name="name"
+                  required
+                  minlength="3"
+                  maxlength="100"
+                />
+              </div>
+              <div>
+                <label for="username">Usuario</label
+                ><input
+                  id="username"
+                  name="username"
+                  required
+                  pattern="[a-z0-9._-]{3,40}"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+            <label for="password">Contraseña inicial (12 a 72 caracteres)</label
+            ><input
+              type="password"
+              id="password"
+              name="password"
+              minlength="12"
+              maxlength="72"
+              autocomplete="new-password"
+              required
+            /><button class="button">Registrar participante</button>
+          </form>
+        </details>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

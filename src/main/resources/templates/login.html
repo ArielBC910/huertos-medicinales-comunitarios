@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Iniciar sesión')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content narrow">
+        <div class="eyebrow">BIENVENIDO A TU COMUNIDAD</div>
+        <h1>Volvamos al huerto.</h1>
+        <p class="lead">Ingresa con la cuenta asignada por tu comunidad.</p>
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+          Usuario o contraseña incorrectos, o cuenta inactiva.
+        </div>
+        <form class="panel" th:action="@{/login}" method="post">
+          <label for="username">Usuario</label
+          ><input
+            id="username"
+            name="username"
+            autocomplete="username"
+            required
+            autofocus
+            maxlength="40"
+          /><label for="password">Contraseña</label
+          ><input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="current-password"
+            required
+          /><button class="button" type="submit">Entrar al huerto →</button>
+        </form>
+        <div
+          th:if="${@environment.getProperty('huertos.demo') == 'true'}"
+          class="note"
+        >
+          <h3>Recorrido de demostración</h3>
+          <p>
+            Usuarios: <code>gestor.demo</code>, <code>participante.demo</code> o
+            <code>revisor.demo</code>.
+          </p>
+          <p>Contraseña: <code>HuertosDemo2026!</code></p>
+          <small
+            >Datos ficticios. Estas cuentas solo se crean en el perfil
+            demo.</small
+          >
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

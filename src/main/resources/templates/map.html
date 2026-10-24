@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Mapa de huertos')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">UN TERRITORIO DE SABERES</div>
+        <h1>Nuestras raíces, en el mapa.</h1>
+        <p class="lead">Explora los huertos registrados en Ecuador.</p>
+        <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
+        <div
+          id="map"
+          aria-label="Mapa interactivo de huertos del Ecuador"
+        ></div>
+        <p class="muted">
+          Mapa base: © OpenStreetMap contributors. La carga de teselas requiere
+          conexión a internet. También puedes consultar la lista de huertos.
+        </p>
+        <div class="cards">
+          <a
+            class="panel"
+            th:each="g : ${gardens}"
+            th:href="@{/comunidades/{id}(id=${g.communityId})}"
+            th:attr="data-lat=${g.latitude},data-lng=${g.longitude},data-title=${g.name},data-url=@{/comunidades/{id}(id=${g.communityId})}"
+            ><h3 th:text="${g.name}"></h3>
+            <p>Consultar comunidad ↗</p></a
+          >
+        </div>
+        <script src="/vendor/leaflet/leaflet.js"></script>
+        <script src="/js/map.js" defer></script>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Detalle de actividad')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <a href="/actividades">← Actividades</a>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" th:text="'ACTIVIDAD #'+${activity.id}"></div>
+            <h1 th:text="${types[activity.type]}"></h1>
+          </div>
+          <span
+            class="pill"
+            th:classappend="${activity.status}"
+            th:text="${activity.status}"
+          ></span>
+        </div>
+        <p class="lead" th:text="${activity.description}"></p>
+        <div class="two-col">
+          <section class="panel">
+            <h2>La jornada</h2>
+            <p th:text="'Fecha: '+${activity.date}"></p>
+            <h4>Participantes registrados</h4>
+            <ul>
+              <li th:each="p : ${participants}" th:text="${p}"></li>
+            </ul>
+            <p class="muted">La lista de participantes no puede modificarse.</p>
+            <h4>Recompensa de demostración</h4>
+            <p>
+              <strong th:text="${activity.communityReward}"></strong> puntos
+              comunitarios y
+              <strong th:text="${activity.individualReward}"></strong> por
+              participante, únicamente tras aprobar.
+            </p>
+          </section>
+          <section class="panel">
+            <h2>Última evidencia</h2>
+            <a
+              th:href="@{/evidencias/{id}(id=${latest.id})}"
+              target="_blank"
+              rel="noopener"
+              ><img
+                class="evidence"
+                th:src="@{/evidencias/{id}(id=${latest.id})}"
+                alt="Fotografía de evidencia de la actividad" /></a
+            ><small
+              th:text="'Envío #'+${latest.id}+' · '+${latest.createdAt}"
+            ></small>
+          </section>
+        </div>
+        <form
+          th:if="${actor.role == 'REVISOR' and activity.status == 'PENDIENTE'}"
+          class="panel"
+          th:action="@{/revision/{id}(id=${activity.id})}"
+          method="post"
+        >
+          <h2>Revisión humana</h2>
+          <input
+            type="hidden"
+            name="submissionId"
+            th:value="${latest.id}"
+          /><label for="observations"
+            >Observaciones (obligatorias al rechazar)</label
+          ><textarea
+            name="observations"
+            id="observations"
+            maxlength="2000"
+          ></textarea>
+          <div class="actions">
+            <button class="button" name="decision" value="APROBADA">
+              Aprobar evidencia ✓</button
+            ><button class="button danger" name="decision" value="RECHAZADA">
+              Rechazar evidencia
+            </button>
+          </div>
+        </form>
+        <details
+          th:if="${actor.role == 'GESTOR' and activity.status != 'APROBADA'}"
+          class="panel"
+        >
+          <summary>Corregir y enviar a revisión</summary>
+          <form
+            th:action="@{/gestion/actividades/{id}/reenviar(id=${activity.id})}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <label for="description">Descripción corregida</label
+            ><textarea
+              name="description"
+              id="description"
+              th:text="${activity.description}"
+              minlength="10"
+              maxlength="2000"
+              required
+            ></textarea
+            ><label for="photo">Nueva fotografía (opcional)</label
+            ><input
+              id="photo"
+              type="file"
+              name="photo"
+              accept="image/png,image/jpeg"
+            />
+            <p class="muted">
+              Si no adjuntas una nueva foto se conserva la anterior. Cada envío
+              se registra en el historial.
+            </p>
+            <button class="button">Guardar nuevo envío →</button>
+          </form>
+        </details>
+        <h2>Historial de revisión</h2>
+        <div class="panel">
+          <article class="timeline-row" th:each="r : ${reviews}">
+            <span class="pill" th:text="${r.decision}"></span>
+            <p th:text="${r.observations}"></p>
+            <small
+              th:text="'Revisor #'+${r.reviewerId}+' · envío #'+${r.submissionId}+' · '+${r.createdAt}"
+            ></small>
+          </article>
+          <p th:if="${reviews.isEmpty()}" class="muted">
+            Esta actividad todavía no tiene decisiones de revisión.
+          </p>
+        </div>
+        <h2>Envíos conservados</h2>
+        <div class="panel">
+          <article class="timeline-row" th:each="s : ${submissions}">
+            <a
+              th:href="@{/evidencias/{id}(id=${s.id})}"
+              th:text="'Fotografía del envío #'+${s.id}"
+            ></a>
+            <p th:text="${s.description}"></p>
+            <small
+              th:text="'Autor #'+${s.authorId}+' · '+${s.createdAt}"
+            ></small>
+          </article>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

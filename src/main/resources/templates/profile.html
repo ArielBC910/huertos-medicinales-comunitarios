@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Mi progreso')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">CADA JORNADA DEJA HUELLA</div>
+        <h1 th:text="${actor.displayName}"></h1>
+        <div class="stats">
+          <div>
+            <strong th:text="${progress.individual(actor.id)}"></strong
+            ><small>Puntos personales</small>
+          </div>
+          <div>
+            <strong th:text="${progress.level(actor.id)}"></strong
+            ><small>Nivel individual · sin cupos</small>
+          </div>
+          <div>
+            <strong th:text="${progress.streak(actor.id)}+' días'"></strong
+            ><small>Racha de participación validada</small>
+          </div>
+        </div>
+        <div class="two-col">
+          <section class="panel">
+            <h2>Mis insignias</h2>
+            <span
+              class="badge-earned"
+              th:each="b : ${progress.badges(actor.id)}"
+              th:text="'✧ '+${b}"
+            ></span>
+            <p th:if="${progress.badges(actor.id).isEmpty()}" class="muted">
+              Tu primera actividad aprobada desbloqueará la insignia Primera
+              semilla.
+            </p>
+            <h3 class="mt-4">Misión: manos a la tierra</h3>
+            <p>Participa en 5 actividades aprobadas.</p>
+            <progress
+              max="5"
+              th:value="${progress.approvedFor(actor.id).size()}"
+            ></progress>
+            <p
+              th:text="${progress.approvedFor(actor.id).size() >= 5 ? 'Misión cumplida · insignia obtenida' : 'Misión en curso'}"
+            ></p>
+            <small class="muted"
+              >Reglas demo: Oficial desde 100 puntos, Maestro desde 300. Las
+              insignias y misiones no añaden puntos extra.</small
+            >
+          </section>
+          <section class="panel">
+            <h2>Notificaciones</h2>
+            <article th:each="n : ${notifications}" class="timeline-row">
+              <span class="pill" th:text="${n.seen?'LEÍDA':'NUEVA'}"></span>
+              <p th:text="${n.message}"></p>
+              <small th:text="${n.createdAt}"></small>
+              <form
+                th:unless="${n.seen}"
+                th:action="@{/perfil/notificaciones/{id}(id=${n.id})}"
+                method="post"
+              >
+                <button class="text-button">Marcar como leída</button>
+              </form>
+            </article>
+            <p th:if="${notifications.isEmpty()}" class="muted">
+              Cuando una actividad tuya cambie de estado, verás el aviso aquí.
+            </p>
+          </section>
+        </div>
+        <section class="panel" th:if="${!individualRanking.isEmpty()}">
+          <h2>Ranking personal de tu comunidad</h2>
+          <p class="muted">
+            Los perfiles de otros integrantes se muestran con un identificador
+            comunitario.
+          </p>
+          <div class="rank-row" th:each="u,iter : ${individualRanking}">
+            <span class="rank-number" th:text="${iter.count}"></span
+            ><span
+              th:text="${u.id==actor.id ? 'Tú' : 'Integrante #'+u.id}"
+            ></span
+            ><strong th:text="${progress.individual(u.id)}+' pts'"></strong>
+          </div>
+        </section>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

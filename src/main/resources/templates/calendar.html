@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Calendario agrícola')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">EL TIEMPO DE LA TIERRA</div>
+        <h1>Planifiquemos el cuidado.</h1>
+        <p class="lead">
+          Agenda agrícola precargada. Cada referencia muestra su fuente y estado
+          de validación.
+        </p>
+        <div class="panel">
+          <article class="calendar-row" th:each="e : ${entries}">
+            <div class="date-block">
+              <strong th:text="${#temporals.format(e.date,'dd')}"></strong
+              ><span th:text="${#temporals.format(e.date,'MMM yyyy')}"></span>
+            </div>
+            <div>
+              <span class="pill" th:text="${e.phase}"></span>
+              <h3 th:text="${e.suggestion}"></h3>
+              <small class="muted" th:text="${e.source}"></small>
+            </div>
+          </article>
+          <p th:if="${entries.isEmpty()}" class="empty">
+            No hay información agrícola precargada todavía.
+          </p>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

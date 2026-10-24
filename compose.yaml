@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: huertos
+      POSTGRES_USER: huertos
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U huertos -d huertos"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/huertos
+      DB_USER: huertos
+      DB_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - photos:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  pgdata:
+  photos:

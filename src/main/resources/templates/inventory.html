@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Bodega comunitaria')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">RECURSOS QUE HACEMOS DURAR</div>
+        <h1>La bodega de todos.</h1>
+        <p class="lead">
+          Herramientas, semillas y abonos disponibles en tu comunidad.
+        </p>
+        <div class="cards">
+          <article class="panel" th:each="i : ${items}">
+            <span class="pill" th:text="${i.category}"></span>
+            <h2 th:text="${i.name}"></h2>
+            <p class="inventory-quantity">
+              <strong th:text="${i.quantity}"></strong>
+              <span th:text="${i.unit}"></span>
+            </p>
+            <details th:if="${actor.role=='GESTOR'}">
+              <summary>Editar artículo</summary>
+              <form th:action="@{/gestion/bodega}" method="post">
+                <input type="hidden" name="id" th:value="${i.id}" /><label
+                  th:for="'name-'+${i.id}"
+                  >Nombre</label
+                ><input
+                  th:id="'name-'+${i.id}"
+                  name="name"
+                  th:value="${i.name}"
+                  required
+                  maxlength="100"
+                /><label th:for="'category-'+${i.id}">Categoría</label
+                ><select th:id="'category-'+${i.id}" name="category">
+                  <option
+                    th:each="cat : ${ {'Herramientas','Semillas y plántulas','Abonos y compost'} }"
+                    th:selected="${cat==i.category}"
+                    th:text="${cat}"
+                  ></option></select
+                ><label th:for="'quantity-'+${i.id}">Cantidad</label
+                ><input
+                  th:id="'quantity-'+${i.id}"
+                  type="number"
+                  min="0"
+                  max="1000000"
+                  name="quantity"
+                  th:value="${i.quantity}"
+                  required
+                /><label th:for="'unit-'+${i.id}">Unidad</label
+                ><input
+                  th:id="'unit-'+${i.id}"
+                  name="unit"
+                  th:value="${i.unit}"
+                  required
+                  maxlength="30"
+                /><button class="button">Guardar</button>
+              </form>
+              <form
+                th:action="@{/gestion/bodega/{id}/eliminar(id=${i.id})}"
+                method="post"
+              >
+                <button
+                  class="text-button danger-text"
+                  data-confirm="¿Eliminar este artículo de la bodega?"
+                >
+                  Eliminar artículo
+                </button>
+              </form>
+            </details>
+          </article>
+        </div>
+        <p class="empty" th:if="${items.isEmpty()}">
+          Todavía no hay artículos registrados.
+        </p>
+        <details class="panel" th:if="${actor.role=='GESTOR'}">
+          <summary>＋ Registrar artículo</summary>
+          <form th:action="@{/gestion/bodega}" method="post">
+            <label for="name">Nombre</label
+            ><input name="name" id="name" required maxlength="100" /><label
+              for="category"
+              >Categoría</label
+            ><select name="category" id="category">
+              <option>Herramientas</option>
+              <option>Semillas y plántulas</option>
+              <option>Abonos y compost</option>
+            </select>
+            <div class="two-col">
+              <div>
+                <label for="quantity">Cantidad</label
+                ><input
+                  type="number"
+                  min="0"
+                  max="1000000"
+                  name="quantity"
+                  id="quantity"
+                  required
+                />
+              </div>
+              <div>
+                <label for="unit">Unidad</label
+                ><input
+                  name="unit"
+                  id="unit"
+                  placeholder="unidades, kg, bolsas…"
+                  required
+                  maxlength="30"
+                />
+              </div>
+            </div>
+            <button class="button">Añadir a la bodega</button>
+          </form>
+        </details>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

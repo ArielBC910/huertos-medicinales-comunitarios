@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Revisión de evidencias')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">ADMINISTRACIÓN DE EVIDENCIAS</div>
+        <h1>Una mirada que valida.</h1>
+        <p class="lead">
+          Actividades pendientes de las comunidades que tienes asignadas.
+        </p>
+        <div class="cards">
+          <article class="panel" th:each="a : ${activities}">
+            <span class="pill PENDIENTE">PENDIENTE</span>
+            <h2 th:text="${types[a.type]}"></h2>
+            <p th:text="${a.description}"></p>
+            <small th:text="${a.date}"></small
+            ><a class="button" th:href="@{/actividades/{id}(id=${a.id})}"
+              >Revisar evidencia →</a
+            >
+          </article>
+        </div>
+        <div th:if="${activities.isEmpty()}" class="empty panel">
+          <h2>Todo revisado por ahora.</h2>
+          <p>
+            Las nuevas evidencias de tus comunidades asignadas aparecerán aquí.
+          </p>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

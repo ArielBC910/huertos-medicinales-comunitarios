@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Foro comunitario')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">SABERES QUE SE COMPARTEN</div>
+        <h1>Conversemos en comunidad.</h1>
+        <p class="lead">
+          Un espacio para hablar de plantas, cultivo y saberes ancestrales.
+        </p>
+        <details class="note">
+          <summary>Reglas de participación</summary>
+          <p>
+            Publica sobre huertos medicinales y saberes comunitarios. Respeta a
+            las personas, cita las fuentes y evita publicar datos privados o
+            indicaciones médicas. Reporta contenido fuera de tema. El gestor
+            revisará los reportes de su comunidad. Puedes eliminar tu contenido;
+            las publicaciones y comentarios no se editan.
+          </p>
+        </details>
+        <details class="panel">
+          <summary>＋ Compartir una publicación</summary>
+          <form th:action="@{/foro/publicar}" method="post">
+            <label for="title">Título</label
+            ><input
+              id="title"
+              name="title"
+              minlength="3"
+              maxlength="160"
+              required
+            /><label for="body">Tu aporte</label
+            ><textarea
+              id="body"
+              name="body"
+              minlength="5"
+              maxlength="3000"
+              required
+            ></textarea
+            ><button class="button">Publicar</button>
+          </form>
+        </details>
+        <article class="panel forum-post" th:each="p : ${posts}">
+          <small
+            class="muted"
+            th:text="'Integrante #'+${p.authorId}+' · '+${p.createdAt}"
+          ></small>
+          <h2 th:text="${p.title}"></h2>
+          <p class="preserve" th:text="${p.body}"></p>
+          <form
+            th:if="${p.authorId==actor.id}"
+            th:action="@{/foro/{id}/eliminar(id=${p.id})}"
+            method="post"
+          >
+            <button
+              class="text-button danger-text"
+              data-confirm="¿Eliminar tu publicación?"
+            >
+              Eliminar mi publicación
+            </button>
+          </form>
+          <details>
+            <summary>Reportar publicación</summary>
+            <form th:action="@{/foro/{id}/reportar(id=${p.id})}" method="post">
+              <label th:for="'reason-'+${p.id}">Motivo</label
+              ><input
+                th:id="'reason-'+${p.id}"
+                name="reason"
+                minlength="5"
+                maxlength="1000"
+                required
+              /><button class="button secondary">Enviar reporte</button>
+            </form>
+          </details>
+          <div
+            class="comment"
+            th:each="c : ${comments}"
+            th:if="${c.parentId==p.id}"
+          >
+            <small th:text="'Integrante #'+${c.authorId}"></small>
+            <p class="preserve" th:text="${c.body}"></p>
+            <form
+              th:if="${c.authorId==actor.id}"
+              th:action="@{/foro/{id}/eliminar(id=${c.id})}"
+              method="post"
+            >
+              <button class="text-button danger-text">
+                Eliminar mi comentario
+              </button>
+            </form>
+            <details>
+              <summary>Reportar comentario</summary>
+              <form
+                th:action="@{/foro/{id}/reportar(id=${c.id})}"
+                method="post"
+              >
+                <label th:for="'reason-c-'+${c.id}">Motivo</label
+                ><input
+                  th:id="'reason-c-'+${c.id}"
+                  name="reason"
+                  required
+                  minlength="5"
+                  maxlength="1000"
+                /><button class="button secondary">Reportar</button>
+              </form>
+            </details>
+          </div>
+          <details>
+            <summary>Comentar</summary>
+            <form th:action="@{/foro/publicar}" method="post">
+              <input type="hidden" name="parent" th:value="${p.id}" /><input
+                type="hidden"
+                name="title"
+                value="Comentario"
+              /><label th:for="'comment-'+${p.id}">Comentario</label
+              ><textarea
+                th:id="'comment-'+${p.id}"
+                name="body"
+                minlength="5"
+                maxlength="3000"
+                required
+              ></textarea
+              ><button class="button">Compartir comentario</button>
+            </form>
+          </details>
+        </article>
+        <p class="empty" th:if="${posts.isEmpty()}">
+          El foro espera su primera conversación.
+        </p>
+        <section th:if="${actor.role=='GESTOR'}">
+          <h2>Reportes de moderación</h2>
+          <article class="panel" th:each="r : ${reports}">
+            <span class="pill" th:text="${r.status}"></span>
+            <p th:text="'Contenido #'+${r.postId}+' · '+${r.reason}"></p>
+            <p th:if="${r.status!='PENDIENTE'}" th:text="${r.resolution}"></p>
+            <form
+              th:if="${r.status=='PENDIENTE'}"
+              th:action="@{/gestion/reportes/{id}(id=${r.id})}"
+              method="post"
+            >
+              <label th:for="'resolution-'+${r.id}"
+                >Decisión y observaciones</label
+              ><textarea
+                th:id="'resolution-'+${r.id}"
+                name="resolution"
+                minlength="5"
+                maxlength="1000"
+                required
+              ></textarea
+              ><label class="checkbox"
+                ><input type="checkbox" name="hide" value="true" />Ocultar el
+                contenido</label
+              ><button class="button">Registrar moderación</button>
+            </form>
+          </article>
+        </section>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head('Gestionar plantas')}"></head>
+  <body>
+    <aside th:replace="~{layout :: nav}"></aside>
+    <main class="main">
+      <header th:replace="~{layout :: top}"></header>
+      <div class="content">
+        <div class="eyebrow">CATÁLOGO DE TU COMUNIDAD</div>
+        <h1>Registrar un saber.</h1>
+        <div class="two-col">
+          <form class="panel" th:action="@{/gestion/plantas}" method="post">
+            <input type="hidden" name="id" th:value="${plant.id}" />
+            <h2
+              th:text="${plant.id==null?'Nueva planta':'Actualizar planta'}"
+            ></h2>
+            <label for="name">Nombre común</label
+            ><input
+              name="name"
+              id="name"
+              th:value="${plant.name}"
+              required
+              maxlength="100"
+            /><label for="scientific">Nombre científico</label
+            ><input
+              name="scientific"
+              id="scientific"
+              th:value="${plant.scientificName}"
+              required
+              maxlength="150"
+            /><label for="aliases">Otros nombres (opcional)</label
+            ><input
+              name="aliases"
+              id="aliases"
+              th:value="${plant.otherNames}"
+              maxlength="150"
+            /><label for="cycle">Ciclo de cultivo</label
+            ><input
+              name="cycle"
+              id="cycle"
+              th:value="${plant.cycle}"
+              required
+              maxlength="150"
+            /><label for="use">Saber tradicional documentado</label
+            ><textarea
+              name="use"
+              id="use"
+              th:text="${plant.traditionalUse}"
+              required
+              minlength="5"
+              maxlength="2000"
+            ></textarea
+            ><label for="source">Fuente y estado de validación</label
+            ><textarea
+              name="source"
+              id="source"
+              th:text="${plant.source}"
+              required
+              maxlength="1000"
+            ></textarea
+            ><button class="button">Guardar planta</button>
+          </form>
+          <section class="panel">
+            <h2>Plantas registradas</h2>
+            <div class="list-row" th:each="p : ${plants}">
+              <div>
+                <strong th:text="${p.name}"></strong>
+                <p><em th:text="${p.scientificName}"></em></p>
+              </div>
+              <a th:href="@{/gestion/plantas(id=${p.id})}">Editar ↗</a>
+            </div>
+            <a href="/gestion/plantas">＋ Nueva planta</a>
+          </section>
+        </div>
+      </div>
+      <footer th:replace="~{layout :: footer}"></footer>
+    </main>
+  </body>
+</html>
